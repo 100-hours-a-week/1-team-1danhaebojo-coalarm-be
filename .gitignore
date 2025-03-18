@@ -41,4 +41,5 @@ application-*.yml
 
 /node_modules
 
+.DS_Store
 gradle/wrapper/gradle-wrapper.jar
