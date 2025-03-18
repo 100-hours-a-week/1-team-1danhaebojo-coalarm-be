@@ -1,4 +1,31 @@
 spring:
+  datasource:
+    url: jdbc:postgresql://15.164.221.182:5432/coalarm
+    username: coalarm
+    password: qwer2345678!
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      idle-timeout: 30000
+      max-lifetime: 1800000
+      connection-timeout: 30000
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+      connection:
+        provider_disables_autocommit: false
+
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+
+  sql:
+    init:
+      mode: never  # SQL 스크립트 실행 방지
   profiles:
     active: local
 
@@ -9,3 +36,4 @@ springdoc:
     path: /swagger-ui.html
   default-produces-media-type: application/json
   paths-to-match: /**
+
