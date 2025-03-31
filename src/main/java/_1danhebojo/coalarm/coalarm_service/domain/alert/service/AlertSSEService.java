@@ -152,6 +152,8 @@ public class AlertSSEService {
 
     // 로그인한 사용자가 실행
     public SseEmitter subscribe(Long userId) {
+        removeEmitter(userId);
+
         SseEmitter emitter = new SseEmitter(0L);
 
         userEmitters.computeIfAbsent(userId, k -> new ArrayList<>()).add(emitter);
@@ -163,6 +165,9 @@ public class AlertSSEService {
         emitter.onCompletion(() -> removeEmitter(userId));
         emitter.onTimeout(() -> removeEmitter(userId));
         emitter.onError((e) -> removeEmitter(userId));
+
+        log.info("🧠 userEmitters 현재 크기: {}", userEmitters.size());
+        log.info("🧠 userEmitters[{}] emitter 개수: {}", userId, userEmitters.get(userId).size());
 
         return emitter;
     }
