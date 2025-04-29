@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [1.34.2](https://github.com/100-hours-a-week/1-team-1danhaebojo-coalarm-be/compare/v1.34.1...v1.34.2) (2025-04-29)
+
+### 🐛 BUG FIXES
+
+* 배포 스크립트 self-hosted에서 ubuntu-letest 변경 ([5f338f9](https://github.com/100-hours-a-week/1-team-1danhaebojo-coalarm-be/commit/5f338f9c9523c874c82f61cd836de7df9d2e083e))
+
 ## [1.34.1](https://github.com/100-hours-a-week/1-team-1danhaebojo-coalarm-be/compare/v1.34.0...v1.34.1) (2025-04-24)
 
 ### 🐛 BUG FIXES
