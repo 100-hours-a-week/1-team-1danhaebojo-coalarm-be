@@ -12,7 +12,7 @@ on:
 jobs:
   deploy:
     if: github.repository == '100-hours-a-week/1-team-1danhaebojo-coalarm-be'
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
