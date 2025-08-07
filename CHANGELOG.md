@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [1.34.3](https://github.com/100-hours-a-week/1-team-1danhaebojo-coalarm-be/compare/v1.34.2...v1.34.3) (2025-08-07)
+
+### ♻️ REFACTORING
+
+* 김치 프리미엄계산 비동기 처리 ([2a8b3ee](https://github.com/100-hours-a-week/1-team-1danhaebojo-coalarm-be/commit/2a8b3ee5ff4f5d29c85b743ef17b9870d949f5f4))
+
 ## [1.34.2](https://github.com/100-hours-a-week/1-team-1danhaebojo-coalarm-be/compare/v1.34.1...v1.34.2) (2025-04-29)
 
 ### 🐛 BUG FIXES
