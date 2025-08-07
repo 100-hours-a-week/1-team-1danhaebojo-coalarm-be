@@ -3,16 +3,20 @@ package _1danhebojo.coalarm.coalarm_service.domain.dashboard.repository;
 import _1danhebojo.coalarm.coalarm_service.domain.coin.repository.entity.CoinEntity;
 import _1danhebojo.coalarm.coalarm_service.domain.dashboard.repository.entity.KimchiPremiumEntity;
 import _1danhebojo.coalarm.coalarm_service.domain.dashboard.repository.entity.QKimchiPremiumEntity;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -43,28 +47,44 @@ public class KimchiPremiumRepositoryImpl implements KimchiPremiumRepository{
     }
 
     @Override
-    public Optional<KimchiPremiumEntity> findTopByCoinAndRegDtBetweenOrderByRegDtDesc(
-            CoinEntity coin,
+    public Map<String, BigDecimal> findLatestPremiumBySymbolsAndRegDtBetween(
+            List<String> symbols,
             LocalDateTime fromDateTime,
             LocalDateTime toDateTime
     ) {
         QKimchiPremiumEntity kp = QKimchiPremiumEntity.kimchiPremiumEntity;
+        QKimchiPremiumEntity kpSub = new QKimchiPremiumEntity("kpSub");
 
         Instant fromInstant = fromDateTime.atZone(ZoneId.systemDefault()).toInstant();
         Instant toInstant = toDateTime.atZone(ZoneId.systemDefault()).toInstant();
 
-        KimchiPremiumEntity result = queryFactory
-                .selectFrom(kp)
+        List<Tuple> results = queryFactory
+                .select(kp.coin.symbol, kp.kimchiPremium)
+                .from(kp)
                 .where(
-                        kp.coin.eq(coin),
-                        kp.regDt.after(fromInstant).or(kp.regDt.eq(fromInstant)),
-                        kp.regDt.before(toInstant).or(kp.regDt.eq(toInstant))
+                        kp.coin.symbol.in(symbols),
+                        kp.regDt.goe(fromInstant),
+                        kp.regDt.lt(toInstant),
+                        kp.regDt.eq(
+                                JPAExpressions
+                                        .select(kpSub.regDt.max())
+                                        .from(kpSub)
+                                        .where(
+                                                kpSub.coin.symbol.eq(kp.coin.symbol),
+                                                kpSub.regDt.goe(fromInstant),
+                                                kpSub.regDt.lt(toInstant)
+                                        )
+                        )
                 )
-                .orderBy(kp.regDt.desc())
-                .fetchFirst();
+                .fetch();
 
-        return Optional.ofNullable(result);
+        return results.stream()
+                .collect(Collectors.toMap(
+                        tuple -> tuple.get(kp.coin.symbol),
+                        tuple -> tuple.get(kp.kimchiPremium)
+                ));
     }
+
 
     @Override
     public long countAllKimchiPremiums() {

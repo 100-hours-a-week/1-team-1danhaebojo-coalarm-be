@@ -68,13 +68,11 @@ public class CoinRepositoryImpl implements CoinRepository {
     }
 
     @Override
-    public CoinEntity findByName(String coin) {
-        return query.select(coinEntity).from(coinEntity).where(coinEntity.name.eq(coin)).fetchOne();
-    }
-
-    @Override
-    public CoinEntity findBySymbol(String symbol) {
-        return query.select(coinEntity).from(coinEntity).where(coinEntity.symbol.eq(symbol)).fetchOne();
+    public List<CoinEntity> findAllWithoutUSDT() {
+        return query.selectFrom(coinEntity)
+                .where(coinEntity.symbol.ne("USDT"))
+                .orderBy(coinEntity.id.asc())
+                .fetch();
     }
 
     private BooleanExpression keywordContains(String keyword) {
